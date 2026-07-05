@@ -4,16 +4,16 @@
   "version": "0.0.0",
   "type": "module",
   "prisma": {
-    "seed": "tsx server/prisma/seed.ts"
+    "seed": "tsx server/src/prisma/seed.ts"
   },
   "scripts": {
-    "dev": "prisma generate --schema=server/prisma/schema.prisma && tsx server/server.ts",
-    "build": "vite build && esbuild server/server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
+    "dev": "prisma generate --schema=server/src/prisma/schema.prisma && tsx server/src/server.ts",
+    "build": "cd client && vite build && cd .. && esbuild server/src/server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
     "start": "node dist/server.cjs",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
-    "db:push": "prisma db push --schema=server/prisma/schema.prisma",
-    "postinstall": "prisma generate --schema=server/prisma/schema.prisma"
+    "db:push": "prisma db push --schema=server/src/prisma/schema.prisma",
+    "postinstall": "prisma generate --schema=server/src/prisma/schema.prisma"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
