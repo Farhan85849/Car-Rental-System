@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCredentials, logout } from '../store/authSlice';
-import { RootState } from '../store/store';
+import { setCredentials, logout } from '@/src/features/auth/store/authSlice';
+import { RootState } from '@/src/store/store';
 import axios from 'axios';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

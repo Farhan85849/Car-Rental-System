@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Calendar, Search, ChevronDown } from 'lucide-react';
-import BookingSearchPanel from './BookingSearchPanel';
+import BookingSearchPanel from '@/src/features/bookings/components/BookingSearchPanel';
 import gsap from 'gsap';
 
 export default function Hero() {

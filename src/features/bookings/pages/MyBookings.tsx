@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
+import { RootState } from '@/src/store/store';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { MapPin, ExternalLink, Download, X } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
-import api from '../lib/api';
+import api from '@/src/api/axios';
 
 const MyBookings = () => {
   const { user } = useSelector((state: RootState) => state.auth);

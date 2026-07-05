@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Star, Shield, Clock, MapPin, ChevronRight, X } from 'lucide-react';
-import Hero from '../components/Hero';
-import { fetchVehicles } from '../store/slices/vehicleSlice';
-import { AppDispatch, RootState } from '../store/store';
+import Hero from '@/src/components/common/Hero';
+import { fetchVehicles } from '@/src/features/vehicles/store/vehicleSlice';
+import { AppDispatch, RootState } from '@/src/store/store';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -19,7 +19,7 @@ export default function Home() {
   
 
   useEffect(() => {
-    dispatch(fetchVehicles());
+    dispatch(fetchVehicles({}));
   }, [dispatch]);
 
   useEffect(() => {

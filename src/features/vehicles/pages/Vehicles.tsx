@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fetchVehicles } from '../store/slices/vehicleSlice';
-import { AppDispatch, RootState } from '../store/store';
+import { fetchVehicles } from '@/src/features/vehicles/store/vehicleSlice';
+import { AppDispatch, RootState } from '@/src/store/store';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ArrowRight, ChevronRight } from 'lucide-react';
 

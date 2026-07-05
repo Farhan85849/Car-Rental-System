@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
+import { RootState } from '@/src/store/store';
 import { motion, AnimatePresence } from 'motion/react';
 import { toast } from 'sonner';
 import { ArrowLeft, ArrowRight, Check, MapPin, Calendar, Shield, Map, Wifi, Baby, CreditCard, Banknote, Building2 } from 'lucide-react';
-import api from '../../lib/api';
+import api from '@/src/api/axios';
 
 const steps = [
   { id: 1, title: 'Dates & Location' },

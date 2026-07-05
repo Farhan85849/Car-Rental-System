@@ -4,7 +4,7 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, Star, Settings, Users, Fuel, Calendar, MapPin, Check, ChevronRight, X, Maximize2 } from 'lucide-react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
+import { RootState } from '@/src/store/store';
 import { toast } from 'sonner';
 
 export default function VehicleDetails() {

@@ -3,8 +3,8 @@ import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-
 import { Menu, X, User as UserIcon, LogOut, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../store/store';
-import { logout } from '../store/authSlice';
+import { RootState } from '@/src/store/store';
+import { logout } from '@/src/features/auth/store/authSlice';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);

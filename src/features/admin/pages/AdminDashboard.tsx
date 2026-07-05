@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
+import { RootState } from '@/src/store/store';
 import { motion } from 'framer-motion';
 import { Car, CalendarDays, DollarSign, Edit, CheckCircle, XCircle } from 'lucide-react';
-import api from '../lib/api';
+import api from '@/src/api/axios';
 import { toast } from 'sonner';
 
 const AdminDashboard = () => {

@@ -1,29 +1,34 @@
 const fs = require('fs');
 
-function restoreHero() {
-  let code = fs.readFileSync('src/components/Hero.tsx', 'utf-8');
-
-  // Restore the video tag to img tag
-  code = code.replace(
-    /<video[\s\S]*?<\/video>/,
-    `<img src="/images/hero_bg.jpg" alt="Hero Background" className="absolute inset-0 w-full h-full object-cover opacity-[0.65]" />`
-  );
-  fs.writeFileSync('src/components/Hero.tsx', code);
+function replaceFileContent(filePath, searchRegex, replaceText) {
+  let content = fs.readFileSync(filePath, 'utf8');
+  content = content.replace(searchRegex, replaceText);
+  fs.writeFileSync(filePath, content, 'utf8');
 }
 
-function restoreHome() {
-  let code = fs.readFileSync('src/pages/Home.tsx', 'utf-8');
+// 1. Hero.tsx
+replaceFileContent('src/components/common/Hero.tsx', /import BookingSearchPanel from '\.\/BookingSearchPanel';/, "import BookingSearchPanel from '@/src/features/bookings/components/BookingSearchPanel';");
 
-  // Restore the video tag to img tag
-  code = code.replace(
-    /<video[\s\S]*?<\/video>/,
-    `<img src="/images/home_banner.jpg" alt="Immersive Banner" className="w-full h-full object-cover scale-105 pointer-events-none" />`
-  );
-  
-  // Also change group/video to group/banner to be safe if that exists
-  code = code.replace(/group\/video/g, 'group/banner');
-  fs.writeFileSync('src/pages/Home.tsx', code);
-}
+// 2. AdminDashboard.tsx
+replaceFileContent('src/features/admin/pages/AdminDashboard.tsx', /import api from '\.\.\/lib\/api';/, "import api from '@/src/api/axios';");
 
-restoreHero();
-restoreHome();
+// 3. BookingWizard.tsx
+replaceFileContent('src/features/bookings/pages/BookingWizard.tsx', /import api from '\.\.\/\.\.\/lib\/api';/, "import api from '@/src/api/axios';");
+
+// 4. MyBookings.tsx
+replaceFileContent('src/features/bookings/pages/MyBookings.tsx', /import api from '\.\.\/lib\/api';/, "import api from '@/src/api/axios';");
+
+// 5. Vehicles.tsx
+// wait, the error is: Property 'vehicles' does not exist on type '{}'.
+// This is because RootState type is broken.
+
+// 6. main.tsx
+replaceFileContent('src/main.tsx', /import \{ AuthProvider \} from '\.\/components\/AuthProvider';/, "import { AuthProvider } from '@/src/features/auth/providers/AuthProvider';");
+
+// 7. Home.tsx
+replaceFileContent('src/pages/Home.tsx', /import Hero from '\.\.\/components\/Hero';/, "import Hero from '@/src/components/common/Hero';");
+
+// 8. store.ts
+replaceFileContent('src/store/store.ts', /import vehicleReducer from '\.\/slices\/vehicleSlice';/, "import vehicleReducer from '@/src/features/vehicles/store/vehicleSlice';");
+replaceFileContent('src/store/store.ts', /import authReducer from '\.\/slices\/authSlice';/, "import authReducer from '@/src/features/auth/store/authSlice';");
+replaceFileContent('src/store/store.ts', /import bookingReducer from '\.\/slices\/bookingSlice';/, "import bookingReducer from '@/src/features/bookings/store/bookingSlice';");

@@ -3,23 +3,23 @@ import { useEffect } from 'react';
 import Lenis from 'lenis';
 import { Toaster } from 'sonner';
 
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import Home from './pages/Home';
-import Vehicles from './pages/Vehicles';
-import VehicleDetails from './pages/VehicleDetails';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import AdminDashboard from './pages/AdminDashboard';
-import Profile from './pages/Profile';
-import MyBookings from './pages/MyBookings';
-import Services from './pages/Services';
-import Locations from './pages/Locations';
-import Contact from './pages/Contact';
-import About from './pages/About';
-import Careers from './pages/Careers';
-import Journal from './pages/Journal';
-import BookingWizard from './pages/booking/BookingWizard';
+import Navbar from '@/src/layouts/Navbar';
+import Footer from '@/src/layouts/Footer';
+import Home from '@/src/pages/Home';
+import Vehicles from '@/src/features/vehicles/pages/Vehicles';
+import VehicleDetails from '@/src/features/vehicles/pages/VehicleDetails';
+import Login from '@/src/features/auth/pages/Login';
+import Register from '@/src/features/auth/pages/Register';
+import AdminDashboard from '@/src/features/admin/pages/AdminDashboard';
+import Profile from '@/src/features/users/pages/Profile';
+import MyBookings from '@/src/features/bookings/pages/MyBookings';
+import Services from '@/src/pages/Services';
+import Locations from '@/src/pages/Locations';
+import Contact from '@/src/pages/Contact';
+import About from '@/src/pages/About';
+import Careers from '@/src/pages/Careers';
+import Journal from '@/src/pages/Journal';
+import BookingWizard from '@/src/features/bookings/pages/BookingWizard';
 
 function App() {
   useEffect(() => {
