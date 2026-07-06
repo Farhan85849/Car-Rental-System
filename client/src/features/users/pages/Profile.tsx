@@ -23,7 +23,7 @@ const Profile = () => {
           className="bg-[#0a0a0a] border border-white/5 rounded-[1.5rem] md:rounded-[2rem] overflow-hidden"
         >
           <div className="h-24 md:h-32 bg-gradient-to-r from-blue-900/20 to-black relative">
-             <div className="absolute inset-0 bg-[url('/images/home_banner.jpg')] bg-cover bg-center opacity-20 mix-blend-luminosity"></div>
+             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1503376760366-5a413e832041?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-20 mix-blend-luminosity"></div>
           </div>
           
           <div className="px-6 md:px-12 pb-8 md:pb-12 relative -mt-12 md:-mt-16">

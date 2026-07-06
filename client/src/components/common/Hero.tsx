@@ -71,7 +71,7 @@ export default function Hero() {
         transition={{ type: "spring", stiffness: 40, damping: 30 }}
         className="absolute inset-0 z-0 bg-[#030303]"
       >
-        <img src="/images/hero_bg.jpg" alt="Hero Background" className="absolute inset-0 w-full h-full object-cover opacity-[0.65]" />
+        <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=2070&auto=format&fit=crop" alt="Hero Background" className="absolute inset-0 w-full h-full object-cover opacity-[0.65]" />
         {/* Vignette & Gradients */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#030303_100%)] opacity-80" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#030303]/80 via-transparent to-[#030303] opacity-90" />

@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { userRepository } from '../repositories/userRepository';
+import { sendEmail } from '../utils/email';
 
 export class AuthService {
   private signToken(id: string) {
@@ -28,6 +29,15 @@ export class AuthService {
     });
     
     const token = this.signToken(user.id);
+    
+    // Send welcome email
+    await sendEmail(
+      email,
+      'Welcome to Endrive',
+      `Hi ${firstName},\n\nWelcome to Endrive. Your account has been successfully created.`,
+      `<h3>Hi ${firstName},</h3><p>Welcome to Endrive. Your account has been successfully created.</p>`
+    );
+    
     return { token, user: { id: user.id, firstName, lastName, email, role: user.role } };
   }
 
