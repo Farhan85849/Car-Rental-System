@@ -1,44 +1,40 @@
-import { Router } from 'express';
-import { protect, authorize } from '../middleware/authMiddleware';
-import { prisma } from '../prisma';
+import express from 'express';
+import { protect, admin } from '../middleware/authMiddleware';
+import { Review } from '../models/Review';
 
-const router = Router();
+const router = express.Router();
 
-router.get('/vehicle/:vehicleId', async (req, res) => {
+router.get('/:vehicleId', async (req, res) => {
   try {
-    const reviews = await prisma.review.findMany({
-      where: { vehicleId: req.params.vehicleId },
-      include: { user: { select: { firstName: true, lastName: true } } }
-    });
+    const reviews = await Review.find({ vehicleId: req.params.vehicleId }).populate('user', 'firstName lastName avatar').sort({ createdAt: -1 });
     res.json({ success: true, data: reviews });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, error: err.message });
   }
 });
 
-router.post('/', protect, async (req: any, res) => {
+router.post('/', protect, async (req: any, res: any) => {
   try {
     const { vehicleId, rating, comment } = req.body;
-    const review = await prisma.review.create({
-      data: {
-        userId: req.user.id,
-        vehicleId,
-        rating,
-        comment
-      }
+    const review = new Review({
+      userId: req.user.id,
+      vehicleId,
+      rating: parseInt(rating),
+      comment
     });
+    await review.save();
     res.status(201).json({ success: true, data: review });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, error: err.message });
   }
 });
 
-router.delete('/:id', protect, authorize('ADMIN'), async (req, res) => {
+router.delete('/:id', protect, admin, async (req: any, res: any) => {
   try {
-    await prisma.review.delete({ where: { id: req.params.id } });
-    res.json({ success: true, message: 'Review deleted' });
+    await Review.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, error: err.message });
   }
 });
 

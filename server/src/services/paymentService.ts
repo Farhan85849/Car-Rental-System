@@ -10,7 +10,7 @@ export class PaymentService {
       throw new Error('Booking not found');
     }
     
-    if (booking.userId !== user.id && user.role !== 'ADMIN') {
+    if (booking.userId.toString() !== user.id && user.role !== 'ADMIN') {
       throw new Error('Unauthorized');
     }
     

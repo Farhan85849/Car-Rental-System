@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-export default function BookingSearchPanel() {
+const BookingSearchPanel = memo(function BookingSearchPanel() {
   const [location, setLocation] = useState('');
   const [pickupDate, setPickupDate] = useState('');
   const [returnDate, setReturnDate] = useState('');
@@ -24,7 +24,7 @@ export default function BookingSearchPanel() {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-      className="bg-[#0f0f0f] border border-white/5 rounded-[2.5rem] p-3 w-full max-w-5xl mx-auto shadow-2xl relative z-20 mt-8"
+      className="bg-[#0f0f0f] border border-white/5 rounded-[2.5rem] p-3 w-full max-w-5xl mx-auto shadow-2xl relative z-20 mt-8 will-change-transform"
     >
       <form onSubmit={handleSearch} className="flex flex-col lg:flex-row items-center justify-between gap-3 lg:gap-4">
         
@@ -115,4 +115,6 @@ export default function BookingSearchPanel() {
       </form>
     </motion.div>
   );
-}
+});
+
+export default BookingSearchPanel;

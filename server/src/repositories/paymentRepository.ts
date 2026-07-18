@@ -1,43 +1,62 @@
-import { prisma } from '../prisma';
+import { Payment } from '../models/Payment';
+import { Booking } from '../models/Booking';
+import mongoose from 'mongoose';
 
 export class PaymentRepository {
-  async processPaymentWithTransaction(bookingId: string, amount: number, method: string, totalPrice: number, taxAmount: number) {
-    const transactionId = `TXN-${Math.floor(Math.random() * 1000000000)}`;
-    const invoiceNumber = `INV-${new Date().getFullYear()}-${Math.floor(Math.random() * 100000).toString().padStart(5, '0')}`;
-    
-    return prisma.$transaction(async (tx) => {
-      const payment = await tx.payment.create({
-        data: {
-          bookingId,
-          amount,
-          method,
-          status: 'PAID',
-          transactionId,
-        }
+  async create(data: any) {
+    const payment = new Payment(data);
+    await payment.save();
+    return payment;
+  }
+
+  async findById(id: string) {
+    return Payment.findById(id);
+  }
+
+  async findByBookingId(bookingId: string) {
+    return Payment.findOne({ bookingId });
+  }
+
+  async update(id: string, data: any) {
+    return Payment.findByIdAndUpdate(id, data, { new: true });
+  }
+
+  async updateStatusAndTransactionId(bookingId: string, status: string, transactionId: string) {
+    return Payment.findOneAndUpdate(
+      { bookingId },
+      { status, transactionId },
+      { new: true }
+    );
+  }
+
+  async processPaymentWithTransaction(bookingId: string, amount: number, method: string, totalPrice: number, tax: number) {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      const transactionId = `txn_${Date.now()}`;
+      const payment = new Payment({
+        bookingId,
+        amount,
+        method,
+        status: 'COMPLETED',
+        transactionId
       });
+      await payment.save({ session });
       
-      await tx.invoice.create({
-        data: {
-          invoiceNumber,
-          bookingId,
-          totalAmount: totalPrice,
-          taxAmount: taxAmount,
-          status: 'PAID',
-        }
-      });
+      const booking = await Booking.findByIdAndUpdate(
+        bookingId,
+        { status: 'CONFIRMED', paymentId: payment._id },
+        { new: true, session }
+      );
       
-      await tx.booking.update({
-        where: { id: bookingId },
-        data: { 
-            status: 'CONFIRMED',
-            statusHistory: {
-                create: { status: 'CONFIRMED', notes: `Payment received via ${method}. Transaction ID: ${transactionId}` }
-            }
-        }
-      });
-      
+      await session.commitTransaction();
+      session.endSession();
       return payment;
-    });
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
   }
 }
 

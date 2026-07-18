@@ -107,6 +107,9 @@ export default function Navbar() {
                   <Link to="/bookings" className="block px-4 py-2 text-xs font-medium uppercase tracking-wider text-slate-400 hover:bg-white/5 hover:text-white transition-colors">
                     My Bookings
                   </Link>
+                  <Link to="/my-fines" className="block px-4 py-2 text-xs font-medium uppercase tracking-wider text-slate-400 hover:bg-white/5 hover:text-white transition-colors">
+                    My Fines
+                  </Link>
                   <button 
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-3 text-xs font-medium uppercase tracking-wider text-red-400 hover:bg-red-500/10 transition-colors border-t border-white/5 mt-2 flex items-center gap-2"

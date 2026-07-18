@@ -1,16 +1,18 @@
-import { prisma } from '../prisma';
+import { User } from '../models/User';
 
 export class UserRepository {
   async findByEmail(email: string) {
-    return prisma.user.findUnique({ where: { email } });
+    return User.findOne({ email });
   }
 
   async create(data: any) {
-    return prisma.user.create({ data });
+    const user = new User(data);
+    await user.save();
+    return user;
   }
 
   async findById(id: string) {
-    return prisma.user.findUnique({ where: { id } });
+    return User.findById(id);
   }
 }
 

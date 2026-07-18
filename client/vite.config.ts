@@ -13,7 +13,18 @@ export default defineConfig(() => {
     },
     build: {
       outDir: '../dist',
-      emptyOutDir: true
+      emptyOutDir: true,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+            'motion': ['framer-motion'],
+            'lucide': ['lucide-react'],
+            'redux': ['@reduxjs/toolkit', 'react-redux'],
+            'gsap': ['gsap']
+          }
+        }
+      }
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.

@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/src/store/store';
 import { motion } from 'framer-motion';
-import { Car, CalendarDays, DollarSign, Edit, CheckCircle, XCircle } from 'lucide-react';
+import { Car, CalendarDays, DollarSign, Edit, CheckCircle, XCircle, FileText } from 'lucide-react';
+import { AdminInspections } from './AdminInspections';
+import { AiAnalytics } from '@/src/components/AiAnalytics';
 import api from '@/src/api/axios';
 import { toast } from 'sonner';
 
 const AdminDashboard = () => {
   const { user } = useSelector((state: RootState) => state.auth);
+  const navigate = useNavigate();
   const [bookings, setBookings] = useState<any[]>([]);
   const [vehicles, setVehicles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,6 +44,9 @@ const AdminDashboard = () => {
       await api.put(`/bookings/${id}/status`, { status });
       setBookings(bookings.map(b => b.id === id ? { ...b, status } : b));
       toast.success(`Booking status updated to ${status}`);
+      if (status === 'PENDING_INSPECTION') {
+         navigate(`/admin/inspections/return/${id}`);
+      }
     } catch (err: any) {
       toast.error(err.response?.data?.error || 'Failed to update status');
     }
@@ -66,6 +73,7 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-[#030303] pt-32 pb-24 px-6 font-sans">
       <div className="max-w-[2000px] mx-auto">
         <h1 className="text-[clamp(2.5rem,5vw,5rem)] font-bold tracking-tighter text-white mb-12 uppercase">Admin <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-200 to-slate-600">Portal</span></h1>
+        <AiAnalytics />
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {stats.map((stat, idx) => (
@@ -98,6 +106,7 @@ const AdminDashboard = () => {
                   <th className="p-6 font-bold">Booking ID</th>
                   <th className="p-6 font-bold">Customer</th>
                   <th className="p-6 font-bold">Vehicle</th>
+                  <th className="p-6 font-bold">Type</th>
                   <th className="p-6 font-bold">Dates</th>
                   <th className="p-6 font-bold">Total</th>
                   <th className="p-6 font-bold">Status</th>
@@ -110,6 +119,12 @@ const AdminDashboard = () => {
                     <td className="p-6 text-slate-300 font-mono text-xs">{booking.bookingNumber}</td>
                     <td className="p-6 text-white">{booking.user?.firstName} {booking.user?.lastName}</td>
                     <td className="p-6 text-slate-300">{booking.vehicle?.brand} {booking.vehicle?.model}</td>
+                    <td className="p-6 text-slate-400">
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[10px] uppercase font-bold text-amber-500">{booking.rentalType || 'CITY'}</span>
+                        <span className="text-[9px] uppercase font-bold bg-white/10 px-2 py-0.5 rounded w-fit">{booking.driveType || 'SELF_DRIVE'}</span>
+                      </div>
+                    </td>
                     <td className="p-6 text-slate-400">
                       {new Date(booking.startDate).toLocaleDateString()} - {new Date(booking.endDate).toLocaleDateString()}
                     </td>
@@ -141,8 +156,13 @@ const AdminDashboard = () => {
                            </button>
                         )}
                         {booking.status === 'ACTIVE' && (
-                           <button onClick={() => updateBookingStatus(booking.id, 'COMPLETED')} className="p-2 bg-slate-500/10 text-slate-300 rounded-lg hover:bg-slate-500/20" title="Complete">
+                           <button onClick={() => updateBookingStatus(booking.id, 'PENDING_INSPECTION')} className="p-2 bg-slate-500/10 text-slate-300 rounded-lg hover:bg-slate-500/20" title="Return Vehicle">
                              <CheckCircle className="w-4 h-4" />
+                           </button>
+                        )}
+                        {booking.status === 'PENDING_INSPECTION' && (
+                           <button onClick={() => navigate(`/admin/inspections/return/${booking.id}`)} className="p-2 bg-purple-500/10 text-purple-400 rounded-lg hover:bg-purple-500/20" title="Inspect Vehicle">
+                             <FileText className="w-4 h-4" />
                            </button>
                         )}
                       </div>
@@ -158,6 +178,7 @@ const AdminDashboard = () => {
             </table>
           </div>
         </div>
+        <AdminInspections />
       </div>
     </div>
   );

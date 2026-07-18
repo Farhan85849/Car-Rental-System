@@ -7,7 +7,7 @@ export class VehicleService {
     
     if (category) whereClause.category = category;
     if (brand) whereClause.brand = brand;
-    if (location) whereClause.location = { contains: String(location) };
+    if (location) whereClause.location = { $regex: new RegExp(String(location), 'i') };
     
     if (startDate && endDate) {
         const start = new Date(startDate as string);
@@ -16,7 +16,7 @@ export class VehicleService {
         const overlappingBookings = await vehicleRepository.findOverlappingBookings(start, end);
         const bookedVehicleIds = overlappingBookings.map(b => b.vehicleId);
         
-        whereClause.id = { notIn: bookedVehicleIds };
+        whereClause._id = { $nin: bookedVehicleIds };
         whereClause.status = 'AVAILABLE';
     }
     

@@ -1,83 +1,99 @@
-import { prisma } from '../prisma';
+import { Booking } from '../models/Booking';
+import { Payment } from '../models/Payment';
+import mongoose from 'mongoose';
+
+const bookingStatusHistorySchema = new mongoose.Schema({
+  bookingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Booking', required: true },
+  status: { type: String, required: true },
+  notes: { type: String },
+}, { timestamps: true });
+
+export const BookingStatusHistoryModel = mongoose.model('BookingStatusHistory', bookingStatusHistorySchema);
 
 export class BookingRepository {
-  async findOverlappingBooking(vehicleId: string, start: Date, end: Date) {
-    return prisma.booking.findFirst({
-      where: {
-        vehicleId,
-        status: { notIn: ['CANCELLED', 'REJECTED', 'REFUNDED'] },
-        AND: [
-          { startDate: { lt: end } },
-          { endDate: { gt: start } }
-        ]
+  async createBookingWithTransaction(data: any) {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      const { statusHistory, ...bookingData } = data;
+      const booking = new Booking(bookingData);
+      await booking.save({ session });
+      
+      if (statusHistory && statusHistory.create) {
+        const history = new BookingStatusHistoryModel({
+          bookingId: booking._id,
+          status: statusHistory.create.status,
+          notes: statusHistory.create.notes
+        });
+        await history.save({ session });
       }
-    });
-  }
-
-  async createBookingWithTransaction(bookingData: any) {
-    return prisma.$transaction(async (tx) => {
-      return tx.booking.create({
-        data: bookingData,
-      });
-    });
-  }
-
-  async findByUserId(userId: string) {
-    return prisma.booking.findMany({
-      where: { userId },
-      include: { vehicle: true, invoice: true, payment: true },
-      orderBy: { createdAt: 'desc' }
-    });
+      
+      await session.commitTransaction();
+      session.endSession();
+      return booking;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
   }
 
   async findById(id: string) {
-    return prisma.booking.findUnique({
-      where: { id },
-      include: { vehicle: true, user: true, invoice: true, payment: true, statusHistory: { orderBy: { createdAt: 'desc' } } }
-    });
+    return Booking.findById(id).populate('user').populate('vehicle').populate('payment');
+  }
+
+  async findByUserId(userId: string) {
+    return Booking.find({ userId }).populate('vehicle').sort({ createdAt: -1 });
   }
 
   async findAll() {
-    return prisma.booking.findMany({
-      include: { vehicle: true, user: true, payment: true },
-      orderBy: { createdAt: 'desc' }
-    });
+    return Booking.find().populate('user').populate('vehicle').sort({ createdAt: -1 });
   }
 
   async updateStatusWithTransaction(bookingId: string, vehicleId: string, status: string, notes: string) {
-    return prisma.$transaction(async (tx) => {
-      const b = await tx.booking.update({
-        where: { id: bookingId },
-        data: {
-          status,
-          statusHistory: {
-            create: {
-              status,
-              notes
-            }
-          }
-        }
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      const booking = await Booking.findByIdAndUpdate(bookingId, { status }, { new: true, session });
+      
+      const history = new BookingStatusHistoryModel({
+        bookingId,
+        status,
+        notes
       });
-
-      if (status === 'ACTIVE') {
-        await tx.vehicle.update({ where: { id: vehicleId }, data: { status: 'RENTED' }});
-      } else if (['COMPLETED', 'CANCELLED', 'REJECTED'].includes(status)) {
-        await tx.vehicle.update({ where: { id: vehicleId }, data: { status: 'AVAILABLE' }});
-      }
-
-      return b;
-    });
+      await history.save({ session });
+      
+      await session.commitTransaction();
+      session.endSession();
+      return booking;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
+  }
+  
+  async cancelBooking(bookingId: string, notes: string) {
+    return this.updateStatusWithTransaction(bookingId, '', 'CANCELLED', notes);
   }
 
-  async cancelBooking(bookingId: string, notes: string) {
-    return prisma.booking.update({
-      where: { id: bookingId },
-      data: {
-        status: 'CANCELLED',
-        statusHistory: {
-          create: { status: 'CANCELLED', notes }
-        }
-      }
+  async updatePaymentInfo(bookingId: string, paymentData: any) {
+    let payment = await Payment.findOne({ bookingId });
+    if (!payment) {
+      payment = new Payment({ bookingId, ...paymentData });
+    } else {
+      Object.assign(payment, paymentData);
+    }
+    await payment.save();
+    return Booking.findByIdAndUpdate(bookingId, { paymentId: payment._id }, { new: true });
+  }
+
+  async findOverlappingBooking(vehicleId: string, startDate: Date, endDate: Date) {
+    return Booking.findOne({
+      vehicleId,
+      status: { $nin: ['CANCELLED', 'REJECTED', 'REFUNDED'] },
+      startDate: { $lt: endDate },
+      endDate: { $gt: startDate }
     });
   }
 }

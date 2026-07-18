@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom';
 import { ArrowRight, Star, Shield, Clock, MapPin, ChevronRight, X } from 'lucide-react';
 import Hero from '@/src/components/common/Hero';
+import { AiRecommendations } from '@/src/components/AiRecommendations';
 import { fetchVehicles } from '@/src/features/vehicles/store/vehicleSlice';
 import { AppDispatch, RootState } from '@/src/store/store';
 import gsap from 'gsap';
@@ -78,6 +79,7 @@ export default function Home() {
   return (
     <div ref={containerRef} className="min-h-screen bg-[#030303] text-white selection:bg-white/30 selection:text-white">
       <Hero />
+      <AiRecommendations />
       
       {/* Featured Fleet - Editorial Layout */}
       <section className="py-24 md:py-32 xl:py-48 px-4 md:px-8 xl:px-12 max-w-[1600px] mx-auto relative z-10">
@@ -115,12 +117,14 @@ export default function Home() {
                 <div key={car.id} className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-8 lg:gap-16 xl:gap-24 items-center group`}>
                   
                   {/* Image Container with Parallax mask */}
-                  <div className="w-full lg:w-[65%] aspect-[4/3] lg:aspect-[16/9] overflow-hidden rounded-[1.5rem] relative">
+                  <div className="w-full lg:w-[65%] aspect-[4/3] lg:aspect-[16/9] overflow-hidden rounded-[1.5rem] relative transform-gpu">
                     <div className="absolute inset-0 bg-black/20 z-10 group-hover:bg-transparent transition-colors duration-700" />
                     <img 
                       src={images[0]} 
-                      alt={car.model} 
-                      className="img-parallax w-full h-full object-cover origin-center"
+                      alt={car.model}
+                      loading="lazy"
+                      decoding="async"
+                      className="img-parallax w-full h-full object-cover origin-center will-change-transform"
                     />
                   </div>
 
@@ -165,8 +169,8 @@ export default function Home() {
       {/* Immersive Video Banner */}
       <section className="relative h-[60vh] md:h-[80vh] min-h-[500px] md:min-h-[600px] w-full overflow-hidden flex items-center justify-center group/banner">
         <div className="absolute inset-0 bg-black z-10 opacity-50 group-hover/video:opacity-30 transition-opacity duration-1000"></div>
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-          <img src="https://images.unsplash.com/photo-1503376760366-5a413e832041?q=80&w=2070&auto=format&fit=crop" alt="Immersive Banner" className="w-full h-full object-cover scale-105 pointer-events-none" />
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none transform-gpu">
+          <img src="https://images.unsplash.com/photo-1503376760366-5a413e832041?q=80&w=2070&auto=format&fit=crop" alt="Immersive Banner" loading="lazy" decoding="async" className="w-full h-full object-cover scale-105 pointer-events-none" />
         </div>
         
         <div className="relative z-20 text-center px-4 max-w-4xl mx-auto flex flex-col items-center">

@@ -1,43 +1,35 @@
-import { prisma } from '../prisma';
+import { Vehicle } from '../models/Vehicle';
+import { Booking } from '../models/Booking';
 
 export class VehicleRepository {
-  async findAll(whereClause: any) {
-    return prisma.vehicle.findMany({
-      where: whereClause,
-      orderBy: { dailyPrice: 'desc' }
-    });
+  async findAll(whereClause: any = {}) {
+    return Vehicle.find(whereClause).sort({ dailyPrice: -1 });
   }
 
   async findOverlappingBookings(start: Date, end: Date) {
-    return prisma.booking.findMany({
-      where: {
-        status: { notIn: ['CANCELLED', 'REJECTED', 'REFUNDED'] },
-        AND: [
-          { startDate: { lt: end } },
-          { endDate: { gt: start } }
-        ]
-      },
-      select: { vehicleId: true }
-    });
+    return Booking.find({
+      status: { $nin: ['CANCELLED', 'REJECTED', 'REFUNDED'] },
+      startDate: { $lt: end },
+      endDate: { $gt: start }
+    }).select('vehicleId');
   }
 
   async findById(id: string) {
-    return prisma.vehicle.findUnique({ where: { id } });
+    return Vehicle.findById(id);
   }
 
   async create(data: any) {
-    return prisma.vehicle.create({ data });
+    const vehicle = new Vehicle(data);
+    await vehicle.save();
+    return vehicle;
   }
 
   async update(id: string, data: any) {
-    return prisma.vehicle.update({
-      where: { id },
-      data
-    });
+    return Vehicle.findByIdAndUpdate(id, data, { new: true });
   }
 
   async delete(id: string) {
-    return prisma.vehicle.delete({ where: { id } });
+    return Vehicle.findByIdAndDelete(id);
   }
 }
 

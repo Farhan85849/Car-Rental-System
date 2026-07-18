@@ -6,7 +6,12 @@ import { sendEmail } from '../utils/email';
 
 export class BookingService {
   async createBooking(data: any, userId: string) {
-    const { vehicleId, startDate, endDate, pickupLoc, dropoffLoc, extras } = data;
+    const { 
+      vehicleId, startDate, endDate, pickupLoc, dropoffLoc, 
+      rentalType, tripType, driveType,
+      destinationCity, returnCity, estimatedDistance,
+      extras 
+    } = data;
     
     const vehicle = await vehicleRepository.findById(vehicleId);
     if (!vehicle) throw new Error('Vehicle not found');
@@ -15,7 +20,13 @@ export class BookingService {
     const overlapping = await bookingRepository.findOverlappingBooking(vehicleId, new Date(startDate), new Date(endDate));
     if (overlapping) throw new Error('Vehicle is already booked for these dates');
     
-    const priceDetailsForDb = calculateBookingPrice(vehicle, startDate, endDate, extras || {});
+    const priceDetailsForDb = calculateBookingPrice(
+      vehicle, startDate, endDate, 
+      rentalType, tripType, driveType,
+      { gps: extras?.gps, childSeat: extras?.childSeat, wifi: extras?.wifi },
+      { estimatedDistance, securityDeposit: data.securityDeposit }
+    );
+    
     const bookingNumber = generateBookingNumber();
     
     const bookingData = {
@@ -26,13 +37,21 @@ export class BookingService {
       endDate: new Date(endDate),
       pickupLoc,
       dropoffLoc,
+      
+      rentalType: rentalType || 'CITY',
+      tripType: tripType || 'DAILY',
+      driveType: driveType || 'SELF_DRIVE',
+      destinationCity,
+      returnCity,
+      estimatedDistance,
+      
       ...priceDetailsForDb,
-      driverOption: extras?.driverOption || false,
-      insurance: extras?.insurance || false,
+      
       gps: extras?.gps || false,
       childSeat: extras?.childSeat || false,
       wifi: extras?.wifi || false,
       status: 'AWAITING_PAYMENT',
+      tripStatus: 'UPCOMING',
       statusHistory: {
         create: {
           status: 'AWAITING_PAYMENT',
@@ -64,7 +83,10 @@ export class BookingService {
   async getBookingById(id: string, user: any) {
     const booking = await bookingRepository.findById(id);
     if (!booking) throw new Error('Not found');
-    if (booking.userId !== user.id && user.role !== 'ADMIN') throw new Error('Unauthorized');
+    
+    if (booking.userId.toString() !== user.id && user.role !== 'ADMIN') {
+      throw new Error('Unauthorized');
+    }
     return booking;
   }
 
@@ -77,10 +99,18 @@ export class BookingService {
     if (!currentBooking) throw new Error('Not found');
     
     const statusNotes = notes || `Status updated to ${status}`;
-    const updated = await bookingRepository.updateStatusWithTransaction(bookingId, currentBooking.vehicleId, status, statusNotes);
+    const updated = await bookingRepository.updateStatusWithTransaction(bookingId, currentBooking.vehicleId.toString(), status, statusNotes);
+    
+    if (status === 'PENDING_INSPECTION') {
+      await vehicleRepository.update(currentBooking.vehicleId.toString(), { status: 'UNDER_INSPECTION' });
+    } else if (status === 'COMPLETED' || status === 'CANCELLED') {
+      await vehicleRepository.update(currentBooking.vehicleId.toString(), { status: 'AVAILABLE' });
+    } else if (status === 'ACTIVE') {
+      await vehicleRepository.update(currentBooking.vehicleId.toString(), { status: 'RENTED' });
+    }
     
     // Email update
-    const user = await userRepository.findById(currentBooking.userId);
+    const user = await userRepository.findById(currentBooking.userId.toString());
     if (user && user.email) {
       await sendEmail(
         user.email,
@@ -96,7 +126,11 @@ export class BookingService {
   async cancelBooking(bookingId: string, userId: string) {
     const currentBooking = await bookingRepository.findById(bookingId);
     if (!currentBooking) throw new Error('Not found');
-    if (currentBooking.userId !== userId) throw new Error('Unauthorized');
+    
+    if (currentBooking.userId.toString() !== userId) {
+      throw new Error('Unauthorized');
+    }
+    
     if (['ACTIVE', 'COMPLETED', 'CANCELLED'].includes(currentBooking.status)) {
       throw new Error('Cannot cancel this booking');
     }
@@ -117,11 +151,21 @@ export class BookingService {
   }
 
   async calculatePrice(data: any) {
-    const { vehicleId, startDate, endDate, extras } = data;
+    const { 
+      vehicleId, startDate, endDate, 
+      rentalType, tripType, driveType,
+      estimatedDistance, extras 
+    } = data;
+    
     const vehicle = await vehicleRepository.findById(vehicleId);
     if (!vehicle) throw new Error('Vehicle not found');
     
-    return calculateBookingPrice(vehicle, startDate, endDate, extras || {});
+    return calculateBookingPrice(
+      vehicle, startDate, endDate, 
+      rentalType, tripType, driveType,
+      { gps: extras?.gps, childSeat: extras?.childSeat, wifi: extras?.wifi },
+      { estimatedDistance, securityDeposit: data.securityDeposit }
+    );
   }
 }
 
