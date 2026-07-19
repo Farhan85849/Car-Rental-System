@@ -741,7 +741,7 @@ const BookingWizard = () => {
                     )}
 
                     <div className="flex justify-between text-gray-400 pt-4 border-t border-white/5">
-                      <span>Taxes (16% GST)</span>
+                      <span>Taxes (2% GST)</span>
                       <span className="text-white font-mono">+ {priceDetails.tax.toLocaleString()}</span>
                     </div>
 

@@ -24,7 +24,7 @@ const About = () => {
           transition={{ delay: 0.2 }}
           className="aspect-[21/9] w-full rounded-[2rem] overflow-hidden mb-16 relative"
         >
-          <img src="https://images.unsplash.com/photo-1503376760366-5a413e832041?q=80&w=2070&auto=format&fit=crop" alt="Luxury Car" className="w-full h-full object-cover" />
+          <img src="https://images.pexels.com/photos/2127733/pexels-photo-2127733.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Luxury Car" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-black/30"></div>
         </motion.div>
 

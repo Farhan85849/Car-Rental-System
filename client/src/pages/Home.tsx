@@ -170,7 +170,7 @@ export default function Home() {
       <section className="relative h-[60vh] md:h-[80vh] min-h-[500px] md:min-h-[600px] w-full overflow-hidden flex items-center justify-center group/banner">
         <div className="absolute inset-0 bg-black z-10 opacity-50 group-hover/video:opacity-30 transition-opacity duration-1000"></div>
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none transform-gpu">
-          <img src="https://images.unsplash.com/photo-1503376760366-5a413e832041?q=80&w=2070&auto=format&fit=crop" alt="Immersive Banner" loading="lazy" decoding="async" className="w-full h-full object-cover scale-105 pointer-events-none" />
+          <img src="https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Immersive Banner" loading="lazy" decoding="async" className="w-full h-full object-cover scale-105 pointer-events-none" />
         </div>
         
         <div className="relative z-20 text-center px-4 max-w-4xl mx-auto flex flex-col items-center">

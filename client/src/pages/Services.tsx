@@ -9,25 +9,25 @@ const Services = () => {
       icon: UserCheck,
       title: "Chauffeur Drive",
       desc: "Experience ultimate luxury with our professional, highly-trained chauffeurs. Perfect for executives and VIPs.",
-      image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0be2?q=80&w=2070&auto=format&fit=crop"
+      image: "https://images.pexels.com/photos/3764984/pexels-photo-3764984.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
     },
     {
       icon: Briefcase,
       title: "Corporate Fleet",
       desc: "Comprehensive mobility solutions for businesses. Flexible leasing and premium transport for your executives.",
-      image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop"
+      image: "https://images.pexels.com/photos/919073/pexels-photo-919073.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
     },
     {
       icon: Heart,
       title: "Wedding & Events",
       desc: "Make your special day unforgettable with our fleet of luxury and exotic vehicles, styled to perfection.",
-      image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop"
+      image: "https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
     },
     {
       icon: Clock,
       title: "Airport Transfers",
       desc: "Punctual, seamless, and comfortable airport pick-ups and drop-offs. We track your flight for guaranteed on-time service.",
-      image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2074&auto=format&fit=crop"
+      image: "https://images.pexels.com/photos/909907/pexels-photo-909907.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
     }
   ];
 

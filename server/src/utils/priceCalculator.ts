@@ -76,7 +76,7 @@ export const calculateBookingPrice = (
   if (extras.wifi) extrasTotal += rentalDuration * 700;
 
   const preTaxTotal = subTotal + driverCharges + driverAllowance + nightStayAllowance + tollCharges + extrasTotal;
-  const tax = preTaxTotal * 0.16; // 16% GST
+  const tax = preTaxTotal * 0.02; // 2% GST
   
   const discount = 0;
   const totalPrice = preTaxTotal + tax - discount + securityDeposit;

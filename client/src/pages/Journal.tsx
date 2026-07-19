@@ -7,19 +7,19 @@ const Journal = () => {
       title: "The Evolution of Electric Luxury",
       category: "Automotive",
       date: "Oct 15, 2023",
-      image: "https://images.unsplash.com/photo-1560958089-b8a1929cea89?q=80&w=2071&auto=format&fit=crop"
+      image: "https://images.pexels.com/photos/100656/pexels-photo-100656.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
     },
     {
       title: "Top 5 Scenic Drives in the Country",
       category: "Lifestyle",
       date: "Sep 28, 2023",
-      image: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=2021&auto=format&fit=crop"
+      image: "https://images.pexels.com/photos/3311574/pexels-photo-3311574.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
     },
     {
       title: "Maintaining Peak Performance",
       category: "Technical",
       date: "Sep 10, 2023",
-      image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?q=80&w=2072&auto=format&fit=crop"
+      image: "https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
     }
   ];
 

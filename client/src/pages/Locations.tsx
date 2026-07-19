@@ -11,7 +11,7 @@ const Locations = () => {
       phone: "+92 42 111 222 333",
       email: "lahore@emdrive.com",
       hours: "Mon - Sun: 24/7",
-      image: "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?q=80&w=2070&auto=format&fit=crop"
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Badshahi_Mosque_front_picture.jpg/1280px-Badshahi_Mosque_front_picture.jpg"
     },
     {
       city: "Karachi",
@@ -20,7 +20,7 @@ const Locations = () => {
       phone: "+92 21 111 222 333",
       email: "karachi@emdrive.com",
       hours: "Mon - Sun: 09:00 - 22:00",
-      image: "https://images.unsplash.com/photo-1579548483751-24891b29a27c?q=80&w=2070&auto=format&fit=crop"
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Seaview_%28Clifton_Beach%29_Karachi.jpg/1280px-Seaview_%28Clifton_Beach%29_Karachi.jpg"
     },
     {
       city: "Islamabad",
@@ -29,7 +29,7 @@ const Locations = () => {
       phone: "+92 51 111 222 333",
       email: "islamabad@emdrive.com",
       hours: "Mon - Sun: 09:00 - 22:00",
-      image: "https://images.unsplash.com/photo-1554866585-cd94860890b7?q=80&w=2065&auto=format&fit=crop"
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Faisal_Mosque_and_Margalla_Hills.jpg/1280px-Faisal_Mosque_and_Margalla_Hills.jpg"
     }
   ];
 

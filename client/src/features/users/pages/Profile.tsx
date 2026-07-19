@@ -95,7 +95,7 @@ const Profile = () => {
         >
           {/* Cover Photo */}
           <div className="h-48 md:h-64 relative bg-gradient-to-r from-[#0a0a0a] via-[#111] to-[#0a0a0a]">
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-luminosity"></div>
+            <div className="absolute inset-0 bg-[url('https://images.pexels.com/photos/1149137/pexels-photo-1149137.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')] bg-cover bg-center opacity-30 mix-blend-luminosity"></div>
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#030303]"></div>
           </div>
 
