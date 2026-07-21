@@ -31,3 +31,16 @@ export const updateProfile = async (req: any, res: Response) => {
     res.status(400).json({ success: false, error: err.message });
   }
 };
+
+export const updateAvatar = async (req: any, res: Response) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'No image provided' });
+    }
+    const avatarUrl = req.file.path;
+    const user = await User.findByIdAndUpdate(req.user.id, { avatar: avatarUrl }, { new: true }).select('-password');
+    res.status(200).json({ success: true, data: user });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+};

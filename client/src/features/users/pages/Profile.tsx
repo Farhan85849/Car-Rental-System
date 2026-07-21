@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/src/store/store';
+import { updateUser } from '@/src/features/auth/store/authSlice';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, Mail, Shield, Award, Edit3, Camera, CheckCircle2, ChevronRight, 
@@ -12,6 +13,7 @@ import { toast } from 'sonner';
 
 const Profile = () => {
   const { user } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
   const [profileData, setProfileData] = useState<any>(null);
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -19,6 +21,33 @@ const Profile = () => {
   
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState<any>({});
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size should be less than 5MB');
+      return;
+    }
+
+    
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    try {
+      const { data } = await api.put('/users/profile/avatar', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      setProfileData(data.data);
+      dispatch(updateUser(data.data));
+      toast.success('Avatar updated successfully');
+    } catch (err) {
+      toast.error('Failed to update avatar');
+    }
+  
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -27,6 +56,7 @@ const Profile = () => {
         setProfileData(data.data.user);
         setBookings(data.data.bookings || []);
         setFormData(data.data.user);
+        dispatch(updateUser(data.data.user));
       } catch (err) {
         toast.error('Failed to load profile data');
       } finally {
@@ -34,12 +64,13 @@ const Profile = () => {
       }
     };
     if (user) fetchProfile();
-  }, [user]);
+  }, [user, dispatch]);
 
   const handleUpdate = async () => {
     try {
       const { data } = await api.put('/users/profile', formData);
       setProfileData(data.data);
+      dispatch(updateUser(data.data));
       setEditMode(false);
       toast.success('Profile updated successfully');
     } catch (err) {
@@ -110,10 +141,20 @@ const Profile = () => {
                   ) : (
                     <User className="w-12 h-12 text-slate-500" />
                   )}
-                  <button className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                  <button 
+                    onClick={() => fileInputRef.current?.click()}
+                    className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300"
+                  >
                     <Camera className="w-6 h-6 text-white mb-1" />
                     <span className="text-[9px] uppercase tracking-widest font-bold">Edit</span>
                   </button>
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    onChange={handleAvatarChange} 
+                    accept="image/*" 
+                    className="hidden" 
+                  />
                 </div>
               </div>
 

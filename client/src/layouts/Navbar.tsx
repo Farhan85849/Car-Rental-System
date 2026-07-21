@@ -82,8 +82,12 @@ export default function Navbar() {
               onClick={() => setShowDropdown(!showDropdown)}
               className="flex items-center gap-3 text-slate-300 hover:text-white transition-colors group"
             >
-              <div className="w-8 h-8 rounded-full bg-white/[0.03] border border-white/10 flex items-center justify-center group-hover:border-white/30 transition-colors">
-                <UserIcon className="w-4 h-4 text-slate-300" />
+              <div className="w-8 h-8 rounded-full bg-white/[0.03] border border-white/10 flex items-center justify-center group-hover:border-white/30 transition-colors overflow-hidden">
+                {user.avatar ? (
+                  <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                ) : (
+                  <UserIcon className="w-4 h-4 text-slate-300" />
+                )}
               </div>
               <span className="text-xs font-semibold tracking-wider uppercase">{user.firstName}</span>
               <ChevronDown className="w-3 h-3" />
@@ -174,8 +178,12 @@ export default function Navbar() {
                   {user ? (
                     <>
                       <div className="flex items-center gap-3 mb-2">
-                        <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-                          <UserIcon className="w-5 h-5 text-white" />
+                        <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center overflow-hidden">
+                          {user.avatar ? (
+                            <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                          ) : (
+                            <UserIcon className="w-5 h-5 text-white" />
+                          )}
                         </div>
                         <div>
                           <p className="text-sm text-slate-400">Signed in as</p>
